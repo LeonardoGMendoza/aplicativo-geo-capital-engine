@@ -47,87 +47,87 @@ def calcular_distancia(lat1, lon1, lat2, lon2):
     a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
     return R * (2 * math.atan2(math.sqrt(a), math.sqrt(1-a)))
 
-    st.sidebar.title("Configurações do Omni-EcoRescue")
-    visao = st.sidebar.radio("Selecione o Perfil de Usuário:", ["Corporativo (B2B)", "Defesa Civil (Governo)"])
+st.sidebar.title("Configurações do Omni-EcoRescue")
+visao = st.sidebar.radio("Selecione o Perfil de Usuário:", ["Corporativo (B2B)", "Defesa Civil (Governo)"])
+
+# Coordenadas realistas das gigantes globais + Contexto ESG
+mapa_dados = [
+    {"lat": 28.5, "lon": -90.0, "ativo": "Plataforma ExxonMobil (Golfo do Mexico)", "comunidade_vizinha": "Vila de Pescadores de Nova Orleans", "risco_secundario": "Vazamento Toxico (Oleoduto)"},
+    {"lat": 29.0, "lon": -88.0, "ativo": "Plataforma Chevron (Golfo do Mexico)", "comunidade_vizinha": "Comunidades Costeiras (Louisiana)", "risco_secundario": "Contaminacao Hidrica (Oleoduto)"},
+    {"lat": -23.8, "lon": -42.2, "ativo": "Plataforma Petrobras (Pre-Sal, Brasil)", "comunidade_vizinha": "Pescadores (Litoral de SP/RJ)", "risco_secundario": "Vazamento no Mar e Destruicao de Manguezal"},
+    {"lat": -6.0, "lon": -50.1, "ativo": "Mina Carajas Vale (Brasil)", "comunidade_vizinha": "Comunidade Ribeirinha e Indigena", "risco_secundario": "Rompimento de Barragem e Risco de Colera"},
+    {"lat": -21.2, "lon": -47.8, "ativo": "Usina Raízen (Sao Paulo)", "comunidade_vizinha": "Bairros Perifericos (Ribeirao Preto)", "risco_secundario": "Fumaca Toxica e Incendios em Lavouras"},
+    {"lat": 21.5, "lon": -120.0, "ativo": "Navio Sonda BP (Pacifico)", "comunidade_vizinha": "Arquipelagos e Ilhas Costeiras", "risco_secundario": "Tsunami com lixo quimico"}
+]
+df_ativos = pd.DataFrame(mapa_dados)
+
+if visao == "Corporativo (B2B)":
+    st.title("🌐 Omni-EcoRescue - DASHBOARD CORPORATIVO")
+    st.markdown("Monitoramento Aeroespacial de Ativos de Petróleo, Mineração e Agronegócio")
+    st.markdown("---")
     
-    # Coordenadas realistas das gigantes globais + Contexto ESG
-    mapa_dados = [
-        {"lat": 28.5, "lon": -90.0, "ativo": "Plataforma ExxonMobil (Golfo do Mexico)", "comunidade_vizinha": "Vila de Pescadores de Nova Orleans", "risco_secundario": "Vazamento Toxico (Oleoduto)"},
-        {"lat": 29.0, "lon": -88.0, "ativo": "Plataforma Chevron (Golfo do Mexico)", "comunidade_vizinha": "Comunidades Costeiras (Louisiana)", "risco_secundario": "Contaminacao Hidrica (Oleoduto)"},
-        {"lat": -23.8, "lon": -42.2, "ativo": "Plataforma Petrobras (Pre-Sal, Brasil)", "comunidade_vizinha": "Pescadores (Litoral de SP/RJ)", "risco_secundario": "Vazamento no Mar e Destruicao de Manguezal"},
-        {"lat": -6.0, "lon": -50.1, "ativo": "Mina Carajas Vale (Brasil)", "comunidade_vizinha": "Comunidade Ribeirinha e Indigena", "risco_secundario": "Rompimento de Barragem e Risco de Colera"},
-        {"lat": -21.2, "lon": -47.8, "ativo": "Usina Raízen (Sao Paulo)", "comunidade_vizinha": "Bairros Perifericos (Ribeirao Preto)", "risco_secundario": "Fumaca Toxica e Incendios em Lavouras"},
-        {"lat": 21.5, "lon": -120.0, "ativo": "Navio Sonda BP (Pacifico)", "comunidade_vizinha": "Arquipelagos e Ilhas Costeiras", "risco_secundario": "Tsunami com lixo quimico"}
-    ]
-    df_ativos = pd.DataFrame(mapa_dados)
-
-    if visao == "Corporativo (B2B)":
-        st.title("🌐 Omni-EcoRescue - DASHBOARD CORPORATIVO")
-        st.markdown("Monitoramento Aeroespacial de Ativos de Petróleo, Mineração e Agronegócio")
-        st.markdown("---")
+    col_mapa, col_ia = st.columns([3, 1])
+    with col_mapa:
+        st.subheader("🛰️ Radares Espaciais NASA vs Infraestrutura Global")
+        st.map(df_ativos, zoom=1, color="#00ff00")
         
-        col_mapa, col_ia = st.columns([3, 1])
-        with col_mapa:
-            st.subheader("🛰️ Radares Espaciais NASA vs Infraestrutura Global")
-            st.map(df_ativos, zoom=1, color="#00ff00")
-            
-            st.subheader("📈 Mercado Financeiro em Tempo Real (Yahoo Finance)")
-            st.dataframe(df_cotacoes, use_container_width=True)
+        st.subheader("📈 Mercado Financeiro em Tempo Real (Yahoo Finance)")
+        st.dataframe(df_cotacoes, use_container_width=True)
 
-        with col_ia:
-            st.subheader("🤖 Assistente de Risco Operacional")
-            alerta_disparado = False
-            for ativo in mapa_dados:
-                for evento in eventos_nasa[:50]:
-                    lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
-                    dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
+    with col_ia:
+        st.subheader("🤖 Assistente de Risco Operacional")
+        alerta_disparado = False
+        for ativo in mapa_dados:
+            for evento in eventos_nasa[:50]:
+                lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
+                
+                if dist < 600:
+                    alerta_disparado = True
+                    st.error(f"🚨 **PERIGO A ATIVOS DETECTADO**")
+                    st.warning(f"**Gatilho:** {evento['title']}\n\n**Ativo:** {ativo['ativo']}\n\n**Distância:** {dist:.0f} KM")
+                    st.markdown("### 🏭 ALERTA PATRIMONIAL")
+                    st.info(f"**Decisao RAG (IA):** Interromper operacao. O valor atual das acoes no mercado amortiza perdas. Evitando dano estrutural bilionario.")
                     
-                    if dist < 600:
-                        alerta_disparado = True
-                        st.error(f"🚨 **PERIGO A ATIVOS DETECTADO**")
-                        st.warning(f"**Gatilho:** {evento['title']}\n\n**Ativo:** {ativo['ativo']}\n\n**Distância:** {dist:.0f} KM")
-                        st.markdown("### 🏭 ALERTA PATRIMONIAL")
-                        st.info(f"**Decisao RAG (IA):** Interromper operacao. O valor atual das acoes no mercado amortiza perdas. Evitando dano estrutural bilionario.")
-                        
-                        if st.button("ENVIAR ORDEM DE BLOQUEIO"):
-                            st.success("✅ Ordem de Bloqueio enviada para a central de operacoes.")
-                        break 
-                if alerta_disparado:
-                    break
-            if not alerta_disparado:
-                st.success("✅ Nenhum ativo corporativo em risco.")
+                    if st.button("ENVIAR ORDEM DE BLOQUEIO"):
+                        st.success("✅ Ordem de Bloqueio enviada para a central de operacoes.")
+                    break 
+            if alerta_disparado:
+                break
+        if not alerta_disparado:
+            st.success("✅ Nenhum ativo corporativo em risco.")
 
-    elif visao == "Defesa Civil (Governo)":
-        st.title("🛡️ Omni-EcoRescue - CENTRO DE COMANDO DEFESA CIVIL")
-        st.markdown("Prevenção Humanitária, Epidemiológica e Ambiental Pós-Desastre")
-        st.markdown("---")
-        
-        col_mapa, col_ia = st.columns([3, 1])
-        with col_mapa:
-            st.subheader("🌍 Radares Espaciais NASA vs Zonas de Vulnerabilidade")
-            # Mapa em vermelho para denotar alerta civil
-            st.map(df_ativos, zoom=1, color="#ff0000")
+elif visao == "Defesa Civil (Governo)":
+    st.title("🛡️ Omni-EcoRescue - CENTRO DE COMANDO DEFESA CIVIL")
+    st.markdown("Prevenção Humanitária, Epidemiológica e Ambiental Pós-Desastre")
+    st.markdown("---")
+    
+    col_mapa, col_ia = st.columns([3, 1])
+    with col_mapa:
+        st.subheader("🌍 Radares Espaciais NASA vs Zonas de Vulnerabilidade")
+        # Mapa em vermelho para denotar alerta civil
+        st.map(df_ativos, zoom=1, color="#ff0000")
 
-        with col_ia:
-            st.subheader("🤖 Assistente Humanitário (RAG)")
-            alerta_disparado = False
-            for ativo in mapa_dados:
-                for evento in eventos_nasa[:50]:
-                    lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
-                    dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
+    with col_ia:
+        st.subheader("🤖 Assistente Humanitário (RAG)")
+        alerta_disparado = False
+        for ativo in mapa_dados:
+            for evento in eventos_nasa[:50]:
+                lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
+                
+                if dist < 600:
+                    alerta_disparado = True
+                    st.error(f"🚨 **EMERGÊNCIA CIVIL DETECTADA**")
+                    st.warning(f"**Desastre:** {evento['title']}\n\n**Zona Afetada:** Raio de {dist:.0f} KM do complexo industrial.")
+                    st.markdown("### 🚑 PLANO DE SAÚDE PÚBLICA")
+                    st.error(f"**Comunidade Ameaçada:** {ativo['comunidade_vizinha']}\n\n**Risco Secundário:** {ativo['risco_secundario']}")
+                    st.info(f"**Recomendacao (OMS/IBAMA):** Enviar kits de descontaminacao e agua potavel. Acionar resgate humanitario para 15 residentes neurodivergentes (evacuação silenciosa).")
                     
-                    if dist < 600:
-                        alerta_disparado = True
-                        st.error(f"🚨 **EMERGÊNCIA CIVIL DETECTADA**")
-                        st.warning(f"**Desastre:** {evento['title']}\n\n**Zona Afetada:** Raio de {dist:.0f} KM do complexo industrial.")
-                        st.markdown("### 🚑 PLANO DE SAÚDE PÚBLICA")
-                        st.error(f"**Comunidade Ameaçada:** {ativo['comunidade_vizinha']}\n\n**Risco Secundário:** {ativo['risco_secundario']}")
-                        st.info(f"**Recomendacao (OMS/IBAMA):** Enviar kits de descontaminacao e agua potavel. Acionar resgate humanitario para 15 residentes neurodivergentes (evacuação silenciosa).")
-                        
-                        if st.button("ACIONAR TROPAS E ONGS"):
-                            st.success("✅ Protocolos enviados para Hospitais e Corpo de Bombeiros.")
-                        break 
-                if alerta_disparado:
-                    break
-            if not alerta_disparado:
-                st.success("✅ Nenhuma comunidade em risco crítico.")
+                    if st.button("ACIONAR TROPAS E ONGS"):
+                        st.success("✅ Protocolos enviados para Hospitais e Corpo de Bombeiros.")
+                    break 
+            if alerta_disparado:
+                break
+        if not alerta_disparado:
+            st.success("✅ Nenhuma comunidade em risco crítico.")
