@@ -1,7 +1,6 @@
-cat > README.md << 'EOF'
 # Omni-EcoRescue
 
-Sistema preditivo que cruza dados de desastres da NASA com ativos industriais globais (plataformas offshore, mineracao, agronegocio) para prevenir perdas corporativas e proteger comunidades vizinhas em risco.
+Sistema preditivo que cruza dados de desastres da NASA com ativos industriais globais (plataformas offshore, mineração, agronegócio) para prevenir perdas corporativas e proteger comunidades vizinhas em risco.
 
 Projeto desenvolvido para o Hackathon "Tech for Change".
 
@@ -9,38 +8,56 @@ Projeto desenvolvido para o Hackathon "Tech for Change".
 
 ## O Problema
 
-Desastres climaticos severos atingem infraestruturas industriais criticas. A falta de precisao na tomada de decisao gera duas consequencias:
+Desastres climáticos severos atingem infraestruturas industriais críticas. A falta de precisão na tomada de decisão gera duas consequências:
 
-- Dano Corporativo: perda estrutural e desvalorizacao de ativos.
-- Dano Social: comunidades vizinhas (pescadores, ribeirinhos) afetadas por riscos secundarios (vazamentos, contaminacao) sem tempo habil para evacuacao.
+- **Dano Corporativo**: perda estrutural e desvalorização de ativos.
+- **Dano Social**: comunidades vizinhas (pescadores, ribeirinhos) afetadas por riscos secundários (vazamentos, contaminação) sem tempo hábil para evacuação.
 
-## A Solucao
+## A Solução
 
 Painel dual que apresenta, para o mesmo evento de risco, duas perspectivas:
 
-- Visao Corporativa (B2B): cruza a localizacao do evento (NASA EONET) com o valor de mercado do ativo (Yahoo Finance) e recomenda acao de mitigacao.
-- Visao de Impacto Social (ESG/Comunidade): identifica a comunidade vizinha ao ativo e recomenda protocolo de evacuacao/suporte humanitario.
+- **Visão Corporativa (B2B)**: cruza a localização do evento (NASA EONET) com o valor de mercado do ativo (Yahoo Finance) e recomenda ação de mitigação.
+- **Visão de Impacto Social (ESG/Comunidade)**: identifica a comunidade vizinha ao ativo e recomenda protocolo de evacuação/suporte humanitário.
 
-Em ambas as visoes, o sistema recomenda -- a decisao final e o acionamento de qualquer acao sao sempre confirmados por um humano, via botao no painel (Human-in-the-Loop).
+Em ambas as visões, o sistema recomenda — a decisão final e o acionamento de qualquer ação são sempre confirmados por um humano, via botão no painel (Human-in-the-Loop).
 
 ## Estudo de Caso
 
-Bacia de Campos (RJ) -- infraestrutura da Petrobras e Colonia de Pescadores Z3 de Macae, que ja possui vinculo formal com a Petrobras via Plano de Compensacao Ambiental exigido pelo IBAMA.
+Bacia de Campos (RJ) — infraestrutura da Petrobras e Colônia de Pescadores Z3 de Macaé, que já possui vínculo formal com a Petrobras via Plano de Compensação Ambiental exigido pelo IBAMA.
 
 ## Arquitetura
 
 | Camada | Tecnologia |
 |---|---|
-| Frontend | Streamlit (frontend/painel_ceo.py) |
-| Calculo de risco geoespacial | math (formula de Haversine, raio de 600 km) |
+| Frontend | Streamlit (`frontend/painel_ceo.py`) |
+| Cálculo de risco geoespacial | `math` (fórmula de Haversine, raio de 600 km) |
 | Dados de desastres | NASA EONET (tempo real) |
-| Dados de mercado | Yahoo Finance (yfinance) |
-| Inteligencia Artificial | Oracle OCI Generative AI (cohere.command-r-plus), com fallback local seguro |
+| Dados de mercado | Yahoo Finance (`yfinance`) |
+| Inteligência Artificial | Oracle OCI Generative AI (`cohere.command-r-plus`), com fallback local seguro |
+
+### Fluxo do sistema
+
+```mermaid
+flowchart TD
+    A[NASA EONET<br/>eventos de desastre em tempo real] --> C{Cálculo de risco<br/>fórmula de Haversine<br/>raio 600 km}
+    B[Yahoo Finance<br/>yfinance] --> C
+    C --> D[Streamlit<br/>frontend/painel_ceo.py]
+    D --> E[Motor de recomendação<br/>backend/oracle_rag.py]
+    E -->|credencial OCI configurada| F[Oracle OCI GenAI<br/>cohere.command-r-plus]
+    E -->|sem credencial| G[Fallback local<br/>recomendação pré-definida]
+    F --> H[Painel dual]
+    G --> H
+    H --> I[Visão Corporativa B2B<br/>mitigação de ativo]
+    H --> J[Visão ESG / Comunidade<br/>protocolo de evacuação]
+    I --> K{Human-in-the-Loop<br/>confirmação manual}
+    J --> K
+```
 
 ## Como rodar localmente
 
 ```bash
-# 1. Instalar dependencias
+# 1. Instalar dependências
 pip install streamlit requests yfinance pandas oci
 
 # 2. Rodar o painel (a partir da pasta raiz do projeto)
@@ -49,26 +66,35 @@ streamlit run frontend/painel_ceo.py
 
 O app abre em http://localhost:8501.
 
-### Integracao com Oracle (opcional)
+### Integração com Oracle (opcional)
 
-O motor de recomendacao (backend/oracle_rag.py) funciona em dois modos:
+O motor de recomendação (`backend/oracle_rag.py`) funciona em dois modos:
 
-- Real: requer o SDK oci instalado e a variavel de ambiente OCI_COMPARTMENT_ID configurada, alem do arquivo de credenciais ~/.oci/config.
-- Fallback (padrao): se a credencial nao estiver configurada, o sistema usa uma recomendacao local pre-definida, mantendo o painel estavel em demonstracoes publicas.
+- **Real**: requer o SDK `oci` instalado e a variável de ambiente `OCI_COMPARTMENT_ID` configurada, além do arquivo de credenciais `~/.oci/config`.
+- **Fallback (padrão)**: se a credencial não estiver configurada, o sistema usa uma recomendação local pré-definida, mantendo o painel estável em demonstrações públicas.
 
-## Documentacao completa
+## Capturas de tela
 
-Ver docs/documentacao_oficial_pitch.md para a documentacao oficial do projeto, incluindo a base legal (CONAMA/EIA-RIMA) e o modelo de negocio detalhado.
+**Visão Corporativa (B2B)** — cruza o evento de risco (NASA EONET) com o ativo industrial mais próximo e recomenda ação de mitigação.
+
+![Dashboard Corporativo](screenshots/visao-corporativa.png)
+
+**Visão de Impacto Social / ESG (Comunidade)** — identifica a comunidade vizinha ao evento e recomenda protocolo de evacuação/suporte humanitário.
+
+![Centro de Comando ESG](screenshots/visao-esg.png)
+
+## Documentação completa
+
+Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projeto, incluindo a base legal (CONAMA/EIA-RIMA) e o modelo de negócio detalhado.
 
 ## Status do projeto (MVP de Hackathon)
 
-- [OK] Calculo de risco geoespacial funcional
-- [OK] Integracao real com NASA EONET e Yahoo Finance
-- [OK] Human-in-the-Loop implementado (toda acao exige confirmacao humana)
-- [EM ANDAMENTO] Integracao com Oracle GenAI: implementada, sujeita a fallback conforme disponibilidade de credencial
-- [EM ANDAMENTO] Scripts em backend/central_executiva.py e backend/omni_engine_alertas.py sao provas de conceito isoladas, nao conectadas ao painel principal
+- [OK] Cálculo de risco geoespacial funcional
+- [OK] Integração real com NASA EONET e Yahoo Finance
+- [OK] Human-in-the-Loop implementado (toda ação exige confirmação humana)
+- [EM ANDAMENTO] Integração com Oracle GenAI: implementada, sujeita a fallback conforme disponibilidade de credencial
+- [EM ANDAMENTO] Scripts em `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal
 
 ## Autores
 
-Equipe do Hackathon "Tech for Change" -- 2026.
-EOF
+Equipe do Hackathon "Tech for Change" — 2026.
