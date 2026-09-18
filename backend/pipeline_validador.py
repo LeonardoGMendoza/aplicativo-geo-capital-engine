@@ -71,7 +71,7 @@ async def validar_alerta_satelite(alerta: AlertaExterno):
     # diz que naquelas condições 100% das vezes foi alarme falso:
     
     if alerta.confianca_api_externa >= 0.80 and probabilidade_falso == 1.0:
-        decisao = "ALERTA BLOQUEADO PELO MOTOR INTERNO"
+        decisao = "SUGESTÃO: BAIXO RISCO - possível falso positivo (requer validação humana)"
         motivo = f"Few-Shot Retrieval encontrou {falsos_positivos} casos similares no passado que eram Falsos Positivos. Evitando parada desnecessária da operação."
         risco_validado = "BAIXO"
         

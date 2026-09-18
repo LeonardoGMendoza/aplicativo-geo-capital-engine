@@ -4,6 +4,7 @@ import yfinance as yf
 import pandas as pd
 import math
 import time
+from backend.oracle_rag import gerar_recomendacao_rag
 
 st.set_page_config(page_title="Omni-Capital Engine", layout="wide", initial_sidebar_state="expanded")
 
@@ -48,7 +49,7 @@ def calcular_distancia(lat1, lon1, lat2, lon2):
     return R * (2 * math.atan2(math.sqrt(a), math.sqrt(1-a)))
 
 st.sidebar.title("Configurações do Omni-EcoRescue")
-visao = st.sidebar.radio("Selecione o Perfil de Usuário:", ["Corporativo (B2B)", "Defesa Civil (Governo)"])
+visao = st.sidebar.radio("Selecione o Perfil de Usuário:", ["Corporativo (B2B)", "Impacto Social / ESG (Comunidade)"])
 
 # Coordenadas realistas das gigantes globais + Contexto ESG
 mapa_dados = [
@@ -60,6 +61,8 @@ mapa_dados = [
     {"lat": 21.5, "lon": -120.0, "ativo": "Navio Sonda BP (Pacifico)", "comunidade_vizinha": "Arquipelagos e Ilhas Costeiras", "risco_secundario": "Tsunami com lixo quimico"}
 ]
 df_ativos = pd.DataFrame(mapa_dados)
+df_cotacoes = buscar_cotacoes()
+eventos_nasa = buscar_nasa()
 
 if visao == "Corporativo (B2B)":
     st.title("🌐 Omni-EcoRescue - DASHBOARD CORPORATIVO")
@@ -79,7 +82,10 @@ if visao == "Corporativo (B2B)":
         alerta_disparado = False
         for ativo in mapa_dados:
             for evento in eventos_nasa[:50]:
-                lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                try:
+                    lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                except (KeyError, IndexError, TypeError):
+                    continue
                 dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
                 
                 if dist < 600:
@@ -87,7 +93,8 @@ if visao == "Corporativo (B2B)":
                     st.error(f"🚨 **PERIGO A ATIVOS DETECTADO**")
                     st.warning(f"**Gatilho:** {evento['title']}\n\n**Ativo:** {ativo['ativo']}\n\n**Distância:** {dist:.0f} KM")
                     st.markdown("### 🏭 ALERTA PATRIMONIAL")
-                    st.info(f"**Decisao RAG (IA):** Interromper operacao. O valor atual das acoes no mercado amortiza perdas. Evitando dano estrutural bilionario.")
+                    texto_ia = gerar_recomendacao_rag(evento['title'], ativo['ativo'], dist, visao)
+                    st.info(texto_ia)
                     
                     if st.button("ENVIAR ORDEM DE BLOQUEIO"):
                         st.success("✅ Ordem de Bloqueio enviada para a central de operacoes.")
@@ -97,8 +104,8 @@ if visao == "Corporativo (B2B)":
         if not alerta_disparado:
             st.success("✅ Nenhum ativo corporativo em risco.")
 
-elif visao == "Defesa Civil (Governo)":
-    st.title("🛡️ Omni-EcoRescue - CENTRO DE COMANDO DEFESA CIVIL")
+elif visao == "Impacto Social / ESG (Comunidade)":
+    st.title("🛡️ Omni-EcoRescue - CENTRO DE COMANDO ESG")
     st.markdown("Prevenção Humanitária, Epidemiológica e Ambiental Pós-Desastre")
     st.markdown("---")
     
@@ -113,19 +120,23 @@ elif visao == "Defesa Civil (Governo)":
         alerta_disparado = False
         for ativo in mapa_dados:
             for evento in eventos_nasa[:50]:
-                lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                try:
+                    lon_nasa, lat_nasa = evento['geometry'][-1].get('coordinates')
+                except (KeyError, IndexError, TypeError):
+                    continue
                 dist = calcular_distancia(ativo['lat'], ativo['lon'], lat_nasa, lon_nasa)
                 
                 if dist < 600:
                     alerta_disparado = True
-                    st.error(f"🚨 **EMERGÊNCIA CIVIL DETECTADA**")
+                    st.error(f"🚨 **EMERGÊNCIA SOCIAL DETECTADA**")
                     st.warning(f"**Desastre:** {evento['title']}\n\n**Zona Afetada:** Raio de {dist:.0f} KM do complexo industrial.")
                     st.markdown("### 🚑 PLANO DE SAÚDE PÚBLICA")
                     st.error(f"**Comunidade Ameaçada:** {ativo['comunidade_vizinha']}\n\n**Risco Secundário:** {ativo['risco_secundario']}")
-                    st.info(f"**Recomendacao (OMS/IBAMA):** Enviar kits de descontaminacao e agua potavel. Acionar resgate humanitario para 15 residentes neurodivergentes (evacuação silenciosa).")
+                    texto_ia = gerar_recomendacao_rag(evento['title'], ativo['ativo'], dist, visao)
+                    st.info(texto_ia)
                     
-                    if st.button("ACIONAR TROPAS E ONGS"):
-                        st.success("✅ Protocolos enviados para Hospitais e Corpo de Bombeiros.")
+                    if st.button("ACIONAR LIDERANÇAS E ONGS"):
+                        st.success("✅ Protocolos enviados para Associações Locais e ONGs.")
                     break 
             if alerta_disparado:
                 break

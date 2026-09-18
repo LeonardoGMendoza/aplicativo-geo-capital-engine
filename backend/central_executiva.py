@@ -84,13 +84,13 @@ def iniciar_central_executiva():
                 print(f"    🤖 [PLANO DE AÇÃO GERADO PELA IA - ORACLE LLM]:")
                 print(f"       🏭 1. ALERTA PATRIMONIAL (B2B):")
                 print(f"          > Recomendação: Interromper extração e acionar travas de segurança.")
-                print(f"          > Proteção de Capital: Cotação US$ {preco:.2f}. Evitando perda de ativos no valor de US$ 80 Milhões.\n")
+                print(f"          > Proteção de Capital: Cotação US$ {preco:.2f}. Evitando dano estrutural e perdas financeiras severas.\n")
                 
                 print(f"       🌍 2. ALERTA ESG E DEFESA CIVIL (IMPACTO SOCIAL):")
                 print(f"          > Comunidade Ameaçada: {ativo['comunidade_vizinha']}.")
                 print(f"          > Risco Secundário: {ativo['risco_secundario']}.")
                 print(f"          > Saúde Pública: Despachar kits de descontaminação e purificadores de água.")
-                print(f"          > Resgate Inclusivo: Acionar protocolo de evacuação para residentes neurodivergentes.")
+                print(f"          > Resgate Inclusivo: Acionar resgate humanitário prioritário para grupos vulneráveis.")
                 print(f"          > Notificação: SMS gerado e enviado à Defesa Civil local.\n")
                 break
                 
