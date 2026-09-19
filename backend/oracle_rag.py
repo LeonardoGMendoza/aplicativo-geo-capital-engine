@@ -1,6 +1,8 @@
 import os
 import oci
+import streamlit as st
 
+@st.cache_data(ttl=600)
 def gerar_recomendacao_rag(evento_nome, ativo_nome, distancia, visao):
     prompt_sistema = f"""
     Você é a IA de tomada de decisão do Omni-EcoRescue.
@@ -24,21 +26,23 @@ def gerar_recomendacao_rag(evento_nome, ativo_nome, distancia, visao):
 
         config = oci.config.from_file()
         genai_client = oci.generative_ai_inference.GenerativeAiInferenceClient(config=config)
-        
-        response = genai_client.generate_text(
-            generate_text_details=oci.generative_ai_inference.models.GenerateTextDetails(
-                compartment_id=compartment_id,
-                serving_mode=oci.generative_ai_inference.models.OnDemandServingMode(
-                    model_id="cohere.command-r-plus"
-                ),
-                inference_request=oci.generative_ai_inference.models.CohereLlmInferenceRequest(
-                    prompt=prompt_sistema,
-                    max_tokens=100,
-                    temperature=0.3
-                )
-            )
+
+        chat_request = oci.generative_ai_inference.models.CohereChatRequest(
+            message=prompt_sistema,
+            max_tokens=100,
+            temperature=0.3
         )
-        return response.data.inference_response.generated_texts[0].text
+
+        chat_detail = oci.generative_ai_inference.models.ChatDetails(
+            compartment_id=compartment_id,
+            serving_mode=oci.generative_ai_inference.models.OnDemandServingMode(
+                model_id="cohere.command-a-03-2025"
+            ),
+            chat_request=chat_request
+        )
+
+        response = genai_client.chat(chat_detail)
+        return response.data.chat_response.text
 
     except Exception as e:
         print(f"[Oracle RAG] Rodando em modo fallback - Falha ou OCI_COMPARTMENT_ID não configurado. Erro: {e}")
