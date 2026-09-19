@@ -101,3 +101,18 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 * **Helton Abadia**
 * **Felipe Vieira**
 
+## Limitações conhecidas
+
+- A IA generativa da Oracle roda em modo de fallback na demonstração pública: sem credencial OCI, o sistema usa uma recomendação local pré-definida.
+- O disparo real de alertas (SMS/WhatsApp) ainda não está implementado; os botões do painel registram a confirmação humana.
+- Os scripts `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal.
+- Os dados dependem da disponibilidade das APIs públicas (NASA EONET e Yahoo Finance).
+- A validação com usuários ainda é inicial; a validação de campo com comunidades reais é um próximo passo.
+
+## Próximos passos
+
+1. Validação de campo com colônias de pescadores e mentores do setor.
+2. Integração ativa com o Oracle GenAI (`cohere.command-a-03-2025`) em produção.
+3. Parceria piloto com uma operadora para acessar dados reais de EIA/RIMA.
+4. Canal de disparo real (SMS/WhatsApp) para lideranças comunitárias.
+
