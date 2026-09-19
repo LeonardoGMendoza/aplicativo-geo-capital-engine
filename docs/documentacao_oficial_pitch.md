@@ -33,4 +33,4 @@ A arquitetura MVP é sustentada por:
   * **Clima:** NASA EONET (Rastreamento ao vivo de tempestades, vulcões, incêndios).
   * **Mercado:** Yahoo Finance (Cotação em tempo real dos ativos afetados).
 * **Inteligência Artificial:** `Oracle OCI Generative AI`.
-  * *Implementação Segura:* Estruturada via SDK oficial (`oci`) consumindo o modelo `cohere.command-r-plus`, com tratamento de erro (fallback local) para garantir a estabilidade do painel caso a chave de API não esteja configurada ou haja falha de conexão durante a apresentação.
+  * *Implementação Segura:* Estruturada via SDK oficial (`oci`) consumindo o modelo `cohere.command-a-03-2025`, com tratamento de erro (fallback local) para garantir a estabilidade do painel caso a chave de API não esteja configurada ou haja falha de conexão durante a apresentação.

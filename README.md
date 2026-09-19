@@ -35,7 +35,7 @@ Bacia de Campos (RJ) — infraestrutura da Petrobras e Colônia de Pescadores Z3
 | Cálculo de risco geoespacial | `math` (fórmula de Haversine, raio de 600 km) |
 | Dados de desastres | NASA EONET (tempo real) |
 | Dados de mercado | Yahoo Finance (`yfinance`) |
-| Inteligência Artificial | Oracle OCI Generative AI (`cohere.command-r-plus`), com fallback local seguro |
+| Inteligência Artificial | Oracle OCI Generative AI (`cohere.command-a-03-2025`), com fallback local seguro |
 
 ### Fluxo do sistema
 
@@ -45,7 +45,7 @@ flowchart TD
     B[Yahoo Finance<br/>yfinance] --> C
     C --> D[Streamlit<br/>frontend/painel_ceo.py]
     D --> E[Motor de recomendação<br/>backend/oracle_rag.py]
-    E -->|credencial OCI configurada| F[Oracle OCI GenAI<br/>cohere.command-r-plus]
+    E -->|credencial OCI configurada| F[Oracle OCI GenAI<br/>cohere.command-a-03-2025]
     E -->|sem credencial| G[Fallback local<br/>recomendação pré-definida]
     F --> H[Painel dual]
     G --> H
