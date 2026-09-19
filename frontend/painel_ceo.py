@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Adiciona a raiz do projeto ao Python para ele achar a pasta 'backend'
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import streamlit as st
 import requests
 import yfinance as yf
