@@ -1,4 +1,5 @@
 # Omni-EcoRescue
+**Acesso ao MVP Público:** [https://aplicativo-geo-capital-engine-3k7pun8ggkjwsyvgb2pgvm.streamlit.app/](https://aplicativo-geo-capital-engine-3k7pun8ggkjwsyvgb2pgvm.streamlit.app/)
 
 Sistema preditivo que cruza dados de desastres da NASA com ativos industriais globais (plataformas offshore, mineração, agronegócio) para prevenir perdas corporativas e proteger comunidades vizinhas em risco.
 
@@ -95,6 +96,8 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 - [EM ANDAMENTO] Integração com Oracle GenAI: implementada, sujeita a fallback conforme disponibilidade de credencial
 - [EM ANDAMENTO] Scripts em `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal
 
-## Autores
+## Equipe e Contribuições
+* **Leonardo Junior Gonzales Mendoza**
+* **Helton Abadia**
+* **Felipe Vieira**
 
-Equipe do Hackathon "Tech for Change" — 2026.
