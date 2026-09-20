@@ -102,11 +102,9 @@ if visao == "Corporativo (B2B)":
                     texto_ia = gerar_recomendacao_rag(evento['title'], ativo['ativo'], dist, visao)
                     st.info(texto_ia)
                     
-                    if st.button("ENVIAR ORDEM DE BLOQUEIO"):
+                    if st.button("ENVIAR ORDEM DE BLOQUEIO", key=f"btn_corp_{ativo['ativo']}"):
                         st.success("✅ Ordem de Bloqueio enviada para a central de operacoes.")
                     break 
-            if alerta_disparado:
-                break
         if not alerta_disparado:
             st.success("✅ Nenhum ativo corporativo em risco.")
 
@@ -141,10 +139,8 @@ elif visao == "Impacto Social / ESG (Comunidade)":
                     texto_ia = gerar_recomendacao_rag(evento['title'], ativo['ativo'], dist, visao)
                     st.info(texto_ia)
                     
-                    if st.button("ACIONAR LIDERANÇAS E ONGS"):
+                    if st.button("ACIONAR LIDERANÇAS E ONGS", key=f"btn_esg_{ativo['ativo']}"):
                         st.success("✅ Protocolos enviados para Associações Locais e ONGs.")
                     break 
-            if alerta_disparado:
-                break
         if not alerta_disparado:
             st.success("✅ Nenhuma comunidade em risco crítico.")

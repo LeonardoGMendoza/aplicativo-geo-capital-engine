@@ -2,3 +2,9 @@ __pycache__/
 *.pyc
 *.pem
 .oci/
+# Configurações do Editor
+.vscode/
+
+# Ambientes Virtuais e Variáveis
+venv/
+.env
