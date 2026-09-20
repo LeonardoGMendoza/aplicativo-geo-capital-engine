@@ -92,7 +92,7 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 
 - [OK] Cálculo de risco geoespacial funcional
 - [OK] Integração real com NASA EONET e Yahoo Finance
-- [OK] Human-in-the-Loop implementado (toda ação exige confirmação humana)
+- [OK] Human-in-the-Loop implementado no painel: a ação (simulada) só ocorre após o clique de confirmação do gestor
 - [EM ANDAMENTO] Integração com Oracle GenAI: implementada, sujeita a fallback conforme disponibilidade de credencial
 - [EM ANDAMENTO] Scripts em `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal
 
@@ -101,10 +101,14 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 * **Helton Abadia**
 * **Felipe Vieira**
 
+Contribuições da equipe: concepção da solução, pesquisa do embasamento legal (EIA/RIMA), desenvolvimento do painel em Python/Streamlit, integração com as APIs geoespaciais e financeiras, estruturação da arquitetura de IA e pesquisa de validação com potenciais usuários.
+
 ## Limitações conhecidas
 
 - A IA generativa da Oracle roda em modo de fallback na demonstração pública: sem credencial OCI, o sistema usa uma recomendação local pré-definida.
-- O disparo real de alertas (SMS/WhatsApp) ainda não está implementado; os botões do painel registram a confirmação humana.
+- O disparo real de alertas (SMS/WhatsApp) ainda não está implementado; os botões do painel exibem a confirmação na tela (simulação), sem envio real.
+- O nome "RAG" no painel se refere ao motor de recomendação; a etapa de recuperação de dados (ex.: base do EIA/RIMA) é um próximo passo.
+- A base de 6 ativos e comunidades do MVP é ilustrativa e fixa no código; o estudo de caso da Bacia de Campos é um cenário de referência.
 - Os scripts `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal.
 - Os dados dependem da disponibilidade das APIs públicas (NASA EONET e Yahoo Finance).
 - A validação com usuários ainda é inicial; a validação de campo com comunidades reais é um próximo passo.
