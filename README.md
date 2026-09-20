@@ -97,11 +97,10 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 - [EM ANDAMENTO] Scripts em `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal
 
 ## Equipe e Contribuições
-* **Leonardo Junior Gonzales Mendoza**
-* **Helton Abadia**
-* **Felipe Vieira**
 
-Contribuições da equipe: concepção da solução, pesquisa do embasamento legal (EIA/RIMA), desenvolvimento do painel em Python/Streamlit, integração com as APIs geoespaciais e financeiras, estruturação da arquitetura de IA e pesquisa de validação com potenciais usuários.
+- **Leonardo Junior Gonzales Mendoza** (RM 373713) — desenvolvimento do painel em Python/Streamlit, integração com as APIs geoespaciais e financeiras, estruturação da arquitetura de IA (Oracle GenAI) e infraestrutura do repositório.
+- **Felipe Eunilio Vieira dos Santos** (RM 369771) — concepção do framework de produtização e modelo de negócio (documento "Decision Intelligence"), incluindo o posicionamento B2B e a lógica de Human-in-the-Loop aplicada à solução.
+- **Helton Rosa da Silva Abadia** (RM 360372) — ajustes técnicos no código, incluindo correção de um bug no motor de alertas que bloqueava o disparo de múltiplos alertas; alterações já enviadas ao GitHub e em processo de integração à branch principal.
 
 ## Limitações conhecidas
 
@@ -119,4 +118,3 @@ Contribuições da equipe: concepção da solução, pesquisa do embasamento leg
 2. Integração ativa com o Oracle GenAI (`cohere.command-a-03-2025`) em produção.
 3. Parceria piloto com uma operadora para acessar dados reais de EIA/RIMA.
 4. Canal de disparo real (SMS/WhatsApp) para lideranças comunitárias.
-
