@@ -65,7 +65,7 @@ pip install streamlit requests yfinance pandas oci
 streamlit run frontend/painel_ceo.py
 ```
 
-O app abre em http://localhost:8501.
+Rodando localmente, o app abre em http://localhost:8501. Para usar sem instalar nada, acesse a versão publicada na nuvem: https://aplicativo-geo-capital-engine-3k7pun8ggkjwsyvgb2pgvm.streamlit.app/
 
 ### Integração com Oracle (opcional)
 
@@ -74,7 +74,7 @@ O motor de recomendação (`backend/oracle_rag.py`) funciona em dois modos:
 - **Real**: requer o SDK `oci` instalado e a variável de ambiente `OCI_COMPARTMENT_ID` configurada, além do arquivo de credenciais `~/.oci/config`.
 - **Fallback (padrão)**: se a credencial não estiver configurada, o sistema usa uma recomendação local pré-definida, mantendo o painel estável em demonstrações públicas.
 
-## Capturas de tela
+## Capturas de tela (versão publicada no Streamlit Cloud)
 
 **Visão Corporativa (B2B)** — cruza o evento de risco (NASA EONET) com o ativo industrial mais próximo e recomenda ação de mitigação.
 
