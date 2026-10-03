@@ -96,7 +96,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 #wrap{display:flex;height:__ALTURA_MAPA__px}
 #map{flex:3;min-width:0;position:relative}
 #panel{flex:0 0 270px;overflow-y:auto;padding:12px;background:#111827;border-left:1px solid #1f2937;font-size:12.5px;line-height:1.55}
-@media (max-width:700px){#wrap{flex-direction:column}#panel{flex:0 0 150px;border-left:none;border-top:1px solid #1f2937}}
+@media (max-width:700px){
+  #wrap{flex-direction:column}
+  #panel{flex:0 0 150px;border-left:none;border-top:1px solid #1f2937}
+  .tbg{width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;padding-bottom:2px}
+  .tbg::-webkit-scrollbar{height:3px}
+  .tbg::-webkit-scrollbar-thumb{background:#374151;border-radius:3px}
+  .fb{flex:0 0 auto}
+}
 
 /* ── filtro escuro sobre tiles OSM ── */
 #map.dark-map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(0.82) saturate(1.1)}
@@ -499,6 +506,9 @@ function toggleLayer(t,btn){
   btn.classList.toggle('on',vis[t]);
   btn.classList.toggle('off',!vis[t]);
   vis[t]?map.addLayer(lyrs[t]):map.removeLayer(lyrs[t]);
+  if(btn.parentElement && btn.parentElement.classList.contains('tbg')){
+    btn.parentElement.scrollTo({left: btn.offsetLeft - 4, behavior:'smooth'});
+  }
 }
 
 /* ── MAIS PRÓXIMO ── */
