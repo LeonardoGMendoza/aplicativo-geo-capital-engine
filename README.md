@@ -53,9 +53,6 @@ flowchart TD
     E -->|sem credencial| G[Fallback local<br/>recomendação pré-definida]
     F --> H[Painel dual]
     G --> H
-    D --> L[Visão Abrigos e Preparação<br/>mapa, alertas NASA e checklist]
-    M[OpenStreetMap<br/>Overpass e Nominatim] --> L
-    A --> L
     H --> I[Visão Corporativa B2B<br/>mitigação de ativo]
     H --> J[Visão ESG / Comunidade<br/>protocolo de evacuação]
     I --> K{Human-in-the-Loop<br/>confirmação manual}
@@ -69,6 +66,16 @@ Terceira opção do menu lateral, organizada em três abas:
 - **Mapa de Abrigos**: o usuário escolhe a cidade (ou busca outra, ou usa o GPS) e o mapa mostra abrigos cadastrados no MVP e locais reais buscados no OpenStreetMap, filtráveis por categoria. Ao clicar em um ponto, abre-se a rota no Waze ou no Google Maps. Se a busca no OpenStreetMap falhar, entra uma lista de reserva ilustrativa.
 - **Central de Alertas**: cruza eventos ativos da NASA EONET com os abrigos cadastrados (raio de 600 km) e lista os que estão em risco.
 - **Checklist de Sobrevivência**: lista de itens de preparação, com indicação do nível de preparo.
+
+Fluxo do mapa de abrigos:
+
+```mermaid
+flowchart LR
+    U[Usuário<br/>cidade, busca ou GPS] --> M[Mapa interativo<br/>Leaflet]
+    O[OpenStreetMap<br/>Overpass e Nominatim] --> M
+    N[NASA EONET<br/>alertas próximos] --> M
+    M --> R[Rota no Waze<br/>ou Google Maps]
+```
 
 ## Como rodar localmente
 
