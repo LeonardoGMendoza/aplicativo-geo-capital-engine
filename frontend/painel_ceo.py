@@ -267,11 +267,7 @@ elif visao == "Abrigos e Preparação":
         )
         render_mapa_interativo(ABRIGOS, eventos_nasa, origem=cidade_sel, altura=630)
         st.caption(
-            "⚠️ **Nota:** Os pontos de alimentação e saúde são **dados ilustrativos** com coordenadas "
-            "aproximadas, incluídos para fins de demonstração do projeto. "
-            "Os abrigos seguem endereços reais das enchentes do RS e chuvas de São Sebastião/SP. "
-            "As rotas são calculadas em tempo real pelo serviço público OSRM; "
-            "se indisponível, uma linha reta tracejada é exibida como referência."
+            "ℹ️ **Nota:** os locais (hospitais, UBS/UPA, farmácias, mercados, hotéis etc.) são buscados no OpenStreetMap; se a busca falhar, entra uma lista de reserva ilustrativa. Os abrigos são cadastrados no MVP, com coordenadas aproximadas. Ao clicar em um ponto, a rota abre no Waze ou no Google Maps, a partir do ponto azul."
         )
 
 

@@ -341,10 +341,12 @@ function mostrarPainel(p,tipo){
 
 /* ── ABRIR WAZE / GOOGLE MAPS ── */
 function abrirWaze(lat,lon){
-  window.open('https://waze.com/ul?ll='+lat+','+lon+'&navigate=yes','_blank');
+  var wz = "https://www.waze.com/live-map/directions?navigate=yes&to=ll."+lat+"%2C"+lon+"&from=ll."+uLat+"%2C"+uLng;
+  window.open(wz, '_blank');
 }
 function abrirGMaps(lat,lon){
-  window.open('https://www.google.com/maps/dir/?api=1&destination='+lat+','+lon,'_blank');
+  var gm = "https://www.google.com/maps/dir/?api=1&origin="+uLat+","+uLng+"&destination="+lat+","+lon;
+  window.open(gm, '_blank');
 }
 
 /* ── NASA ── */
@@ -414,19 +416,18 @@ function processarOverpass(elements,refLat,refLon){
     var tourism=(el.tags.tourism||'').toLowerCase();
     var dist=hav(refLat,refLon,elLat,elLon);
     var end='';
-    if(el.tags['addr:street']) end=el.tags['addr:street']+(el.tags['addr:housenumber']?', '+el.tags['addr:housenumber']:'')+' – SP';
+    if(el.tags['addr:street']) end=el.tags['addr:street']+(el.tags['addr:housenumber']?', '+el.tags['addr:housenumber']:'');
     var p={nome:nome,lat:elLat,lon:elLon,endereco:end,dist:dist,id:el.id};
     if(amenity==='pharmacy'||nome.match(/farmácia|farmacia|drogaria/i)) listas.m.push(p);
     else if(shop==='supermarket'||shop==='convenience'||shop==='marketplace'||nome.match(/mercado|supermercado|atacadão|atacado/i)) listas.c.push(p);
     else if(tourism==='hotel'||tourism==='hostel'||tourism==='guest_house'||social==='shelter'||nome.match(/hotel|albergue|pousada|abrigo temporário/i)) listas.s2.push(p);
     else if(amenity==='marketplace'||social==='food_bank'||nome.match(/banco de alimentos|cozinha comunitária|restaurante popular|distribuição de alimentos/i)) listas.q.push(p);
     else if(amenity==='hospital'||hc==='hospital'||nome.match(/hospital/i)) listas.h.push(p);
-    else if(nome.match(/UPA/i)||op.match(/UPA/i)) listas.u.push(p);
-    else if(nome.match(/UBS|UBSF|USF|AMA\b|Unidade de Sa/i)||op.match(/UBS|SUS/i)) listas.u.push(p);
+    else if(/\bUPA\b/.test(nome)||/\bUPA\b/.test(op)) listas.u.push(p);
+    else if(/\b(UBS|UBSF|USF|AMA)\b/.test(nome)||nome.match(/Unidade de Sa/i)||/\b(UBS|SUS)\b/.test(op)) listas.u.push(p);
     else if(amenity==='police'||nome.match(/delegacia|policia|polícia/i)) listas.d.push(p);
-    else if(amenity==='social_facility'||nome.match(/ONG|abrigo|refugio|refúgio|assistência/i)) listas.o.push(p);
-    else if(nome.match(/Pronto|Saúde|Saude|clinica|clínica/i)) listas.u.push(p);
-    else listas.h.push(p);
+    else if(amenity==='social_facility'||/\bONG\b/.test(nome)||nome.match(/abrigo|refugio|ref\u00fagio|assist\u00eancia/i)) listas.o.push(p);
+    else if(nome.match(/Pronto[- ]?(Socorro|Atendimento)|Sa[\u00fau]de|Cl[\u00edi]nica/i)) listas.u.push(p);
   });
   /* ordena por distância e limita */
   Object.keys(listas).forEach(function(t){
