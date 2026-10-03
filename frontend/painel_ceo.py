@@ -146,7 +146,7 @@ visao = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-st.sidebar.info("⚡ Dados NASA em tempo real\n\n📡 Rodando 100% local")
+st.sidebar.info("⚡ Dados NASA em tempo real\n\n📡 IA: Oracle Cloud (OCI)")
 
 
 # ============================================================
