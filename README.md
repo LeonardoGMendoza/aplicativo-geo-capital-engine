@@ -16,12 +16,14 @@ Desastres climáticos severos atingem infraestruturas industriais críticas. A f
 
 ## A Solução
 
-Painel dual que apresenta, para o mesmo evento de risco, duas perspectivas:
+Painel com três visões. As duas primeiras apresentam, para o mesmo evento de risco, duas perspectivas:
 
 - **Visão Corporativa (B2B)**: cruza a localização do evento (NASA EONET) com o valor de mercado do ativo (Yahoo Finance) e recomenda ação de mitigação.
 - **Visão de Impacto Social (ESG/Comunidade)**: identifica a comunidade vizinha ao ativo e recomenda protocolo de evacuação/suporte humanitário.
 
-Em ambas as visões, o sistema recomenda — a decisão final e o acionamento de qualquer ação são sempre confirmados por um humano, via botão no painel (Human-in-the-Loop).
+- **Abrigos e Preparação (Comunidade)**: mapa interativo para localizar abrigos de evacuação e serviços essenciais próximos (hospitais, UBS/UPA, delegacias, ONGs, farmácias, mercados, alimentação e hospedagem), com alertas NASA e checklist de sobrevivência.
+
+Nas visões Corporativa e ESG, o sistema recomenda — a decisão final e o acionamento de qualquer ação são sempre confirmados por um humano, via botão no painel (Human-in-the-Loop).
 
 ## Estudo de Caso
 
@@ -35,6 +37,8 @@ Bacia de Campos (RJ) — infraestrutura da Petrobras e Colônia de Pescadores Z3
 | Cálculo de risco geoespacial | `math` (fórmula de Haversine, raio de 600 km) |
 | Dados de desastres | NASA EONET (tempo real) |
 | Dados de mercado | Yahoo Finance (`yfinance`) |
+| Mapa de abrigos | Leaflet (`frontend/mapa_interativo.py`) com locais do OpenStreetMap via Overpass API e busca de cidade via Nominatim |
+| Rotas | Link para Waze ou Google Maps, partindo do ponto "você está aqui" |
 | Inteligência Artificial | Oracle OCI Generative AI (`cohere.command-a-03-2025`), com fallback local seguro |
 
 ### Fluxo do sistema
@@ -49,11 +53,22 @@ flowchart TD
     E -->|sem credencial| G[Fallback local<br/>recomendação pré-definida]
     F --> H[Painel dual]
     G --> H
+    D --> L[Visão Abrigos e Preparação<br/>mapa, alertas NASA e checklist]
+    M[OpenStreetMap<br/>Overpass e Nominatim] --> L
+    A --> L
     H --> I[Visão Corporativa B2B<br/>mitigação de ativo]
     H --> J[Visão ESG / Comunidade<br/>protocolo de evacuação]
     I --> K{Human-in-the-Loop<br/>confirmação manual}
     J --> K
 ```
+
+### Visão Abrigos e Preparação
+
+Terceira opção do menu lateral, organizada em três abas:
+
+- **Mapa de Abrigos**: o usuário escolhe a cidade (ou busca outra, ou usa o GPS) e o mapa mostra abrigos cadastrados no MVP e locais reais buscados no OpenStreetMap, filtráveis por categoria. Ao clicar em um ponto, abre-se a rota no Waze ou no Google Maps. Se a busca no OpenStreetMap falhar, entra uma lista de reserva ilustrativa.
+- **Central de Alertas**: cruza eventos ativos da NASA EONET com os abrigos cadastrados (raio de 600 km) e lista os que estão em risco.
+- **Checklist de Sobrevivência**: lista de itens de preparação, com indicação do nível de preparo.
 
 ## Como rodar localmente
 
@@ -92,6 +107,7 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 
 - [OK] Cálculo de risco geoespacial funcional
 - [OK] Integração real com NASA EONET e Yahoo Finance
+- [OK] Visão Abrigos e Preparação: mapa interativo com locais do OpenStreetMap, rotas no Waze/Google Maps, Central de Alertas NASA e checklist
 - [OK] Human-in-the-Loop implementado no painel: a ação (simulada) só ocorre após o clique de confirmação do gestor
 - [EM ANDAMENTO] Integração com Oracle GenAI: implementada, sujeita a fallback conforme disponibilidade de credencial
 - [EM ANDAMENTO] Scripts em `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal
@@ -109,7 +125,9 @@ Ver `docs/documentacao_oficial_pitch.md` para a documentação oficial do projet
 - O nome "RAG" no painel se refere ao motor de recomendação; a etapa de recuperação de dados (ex.: base do EIA/RIMA) é um próximo passo.
 - A base de 6 ativos e comunidades do MVP é ilustrativa e fixa no código; o estudo de caso da Bacia de Campos é um cenário de referência.
 - Os scripts `backend/central_executiva.py` e `backend/omni_engine_alertas.py` são provas de conceito isoladas, não conectadas ao painel principal.
-- Os dados dependem da disponibilidade das APIs públicas (NASA EONET e Yahoo Finance).
+- Os dados dependem da disponibilidade das APIs públicas (NASA EONET, Yahoo Finance, Overpass e Nominatim).
+- No mapa de abrigos, a classificação dos locais do OpenStreetMap é feita pelo nome e pelas tags; locais mal nomeados ou sem tags podem ficar de fora ou aparecer na categoria errada. Os abrigos são cadastrados no MVP, com coordenadas aproximadas.
+- A Central de Alertas usa recomendação local pré-definida, sem chamar o Oracle GenAI.
 - A validação com usuários ainda é inicial; a validação de campo com comunidades reais é um próximo passo.
 
 ## Próximos passos
