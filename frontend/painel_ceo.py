@@ -148,6 +148,14 @@ visao = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.info("⚡ Dados NASA em tempo real\n\n📡 IA: Oracle Cloud (OCI)")
 
+modo_teste = st.sidebar.toggle("Modo de teste (simulação)", value=False)
+if modo_teste and visao != "Abrigos e Preparação":
+    eventos_nasa.insert(0, {
+        "title": "Incêndio simulado",
+        "categories": [{"title": "Wildfires"}],
+        "geometry": [{"coordinates": [-87.0, 28.5]}]
+    })
+
 
 # ============================================================
 # VISÃO 1: CORPORATIVO (B2B)  —  painel_ceo.py original intacto
@@ -178,6 +186,8 @@ if visao == "Corporativo (B2B)":
                 dist = calcular_distancia(ativo["lat"], ativo["lon"], lat_nasa, lon_nasa)
                 if dist < 600:
                     alerta_disparado = True
+                    if evento["title"] == "Incêndio simulado":
+                        st.warning("SIMULAÇÃO: evento fictício, não é dado da NASA")
                     st.error("🚨 **PERIGO A ATIVOS DETECTADO**")
                     st.warning(f"**Gatilho:** {evento['title']}\n\n**Ativo:** {ativo['ativo']}\n\n**Distância:** {dist:.0f} KM")
                     st.markdown("### 🏭 ALERTA PATRIMONIAL")
@@ -218,6 +228,8 @@ elif visao == "Impacto Social / ESG (Comunidade)":
                 dist = calcular_distancia(ativo["lat"], ativo["lon"], lat_nasa, lon_nasa)
                 if dist < 600:
                     alerta_disparado = True
+                    if evento["title"] == "Incêndio simulado":
+                        st.warning("SIMULAÇÃO: evento fictício, não é dado da NASA")
                     st.error("🚨 **EMERGÊNCIA SOCIAL DETECTADA**")
                     st.warning(f"**Desastre:** {evento['title']}\n\n**Zona Afetada:** Raio de {dist:.0f} KM do complexo industrial.")
                     st.markdown("### 🚑 PLANO DE SAÚDE PÚBLICA")
